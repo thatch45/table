@@ -14,13 +14,15 @@ try:
 except ImportError:
     HAS_MSGPACK = False
 
-def gather_backend(backend):
+def gather_backend(backend, sec_backend):
     '''
     Return the table object which abstracts the backend's functionality
     '''
+    if sec_backend is None:
+        sec_backend = backend
     pubname = 'table.public.{0}'.format(backend)
     pubmod = __import__(pubname)
-    secname = 'table.secret.{0}'.format(backend)
+    secname = 'table.secret.{0}'.format(sec_backend)
     secmod = __import__(secname)
     return (getattr(pubmod.public, backend),
             getattr(secmod.secret, backend))
@@ -82,10 +84,11 @@ class Public(object):
             keyfile=None,
             keyfile_secret=None,
             serial='json',
+            sec_backend=None,
             **kwargs):
         self.serial = Serial(serial)
         self.kwargs = kwargs
-        self.public, self.secret = gather_backend(backend)
+        self.public, self.secret = gather_backend(backend, sec_backend)
         self.key = self.__generate(keyfile, keyfile_secret)
 
     def __generate(self, keyfile, keyfile_secret):
