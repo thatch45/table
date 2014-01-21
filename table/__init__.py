@@ -1,6 +1,11 @@
 '''
 Bring the cryptography to the table. This package aims to make a single very
 high level cryptographic interface which abstracts many underlying algorithms.
+
+The keys all contain "keydata", a few keydata, this keydata includes a few
+standard fields and can be expanded:
+
+    ctime: Timestamp
 '''
 
 # Import python libs
@@ -105,8 +110,8 @@ class Public(object):
                 keydata = self.serial.loads(keydata)
             else:
                 raise ValueError('Keyfile {0} Not Found'.format(keyfile))
-            return self.public.generate(keydata)
-        return self.public.generate(**self.kwargs)
+            return self.public.Key(keydata)
+        return self.public.Key(None, **self.kwargs)
 
     def save(self, path):
         '''
