@@ -142,6 +142,8 @@ class Secret(object):
     '''
     Returns a secret object, used to encrypt and decrypt secret messages
     '''
+    # TODO: Make a generator to encrypt messages in chains so we can load blocks
+    # into memory
     def __init__(self, backend='pynacl'):
         self.public, self.secret = gather_backend(backend)
 
