@@ -2,8 +2,8 @@
 Bring the cryptography to the table. This package aims to make a single very
 high level cryptographic interface which abstracts many underlying algorithms.
 
-The keys all contain "keydata", a few keydata, this keydata includes a few
-standard fields and can be expanded:
+The keys all contain a "keydata" dict, the following keydata keys MUST be in
+the underlying keydata dict from the backend:
 
     ctime: Timestamp
 '''
@@ -123,6 +123,7 @@ class Public(object):
         self.kwargs = kwargs
         self.public, self.secret = _gather_backend(backend, sec_backend)
         self.__key = self.__generate(keyfile, keyfile_secret)
+        self.keydata = self.__key.keydata
 
     def __generate(self, keyfile, keyfile_secret):
         '''
