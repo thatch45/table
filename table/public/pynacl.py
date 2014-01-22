@@ -91,7 +91,9 @@ class Key(object):
         '''
         Verify the message
         '''
-        vkey = nacl.signing.VerifyKey(vkey, encoder=nacl.encoding.HexEncoder)
+        vkey = nacl.signing.VerifyKey(
+                vkey._key.verify_key,
+                encoder=nacl.encoding.HexEncoder)
         try:
             vkey.verify(msg)
         except nacl.signing.BadSignatureError:
