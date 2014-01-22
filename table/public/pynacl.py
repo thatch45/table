@@ -70,8 +70,7 @@ class Key(object):
         '''
         Encrypt the message intended for the owner of the passed in pubic key
         '''
-        pub = nacl.public.PublicKey(pub, nacl.encoding.HexEncoder)
-        box = nacl.public.Box(self.priv, pub)
+        box = nacl.public.Box(self.priv, pub.__key.pub)
         nonce = nacl.utils.random(nacl.public.Box.NONCE_SIZE)
         return box.encrypt(msg, nonce)
 
@@ -79,8 +78,7 @@ class Key(object):
         '''
         Decrypt a message from the given pub intended for this private key
         '''
-        pub = nacl.public.PublicKey(pub, nacl.encoding.HexEncoder)
-        box = nacl.public.Box(pub, self.priv)
+        box = nacl.public.Box(self.priv, pub.__key.pub)
         return box.decrypt(msg)
 
     def sign(self, msg):
