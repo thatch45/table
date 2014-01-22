@@ -171,7 +171,7 @@ class Public(object):
         return self.key.sign(msg)
 
     def verify(self, verify_key, signed):
-        return self.key.veriify(verify_key, signed)
+        return self.key.verify(verify_key, signed)
 
 
 class Secret(object):
