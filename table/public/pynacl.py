@@ -17,12 +17,6 @@ import nacl.public
 import nacl.signing
 import nacl.encoding
 
-def generate(keydata=None, sign=True):
-    '''
-    Generate a cryptographic key pair and a signing key pair is sign is set
-    to True
-    '''
-    pass
 
 def Key(object):
     '''
