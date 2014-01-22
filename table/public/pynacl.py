@@ -9,8 +9,8 @@ The keydata consists of the following:
     verify: <HEX verify key>
 '''
 
-# Import python libs
-import time
+# Import table libs
+import table
 
 # Import Cyptographic libs
 import nacl.public
@@ -70,3 +70,38 @@ def Key(object):
             self.keydata['sign'] = self.sign.encode(nacl.encoding.HexEncoder)
             self.verify = self.sign.verify_key
             self.keydata['verify'] = self.verify.encode(nacl.encoding.HexEncoder)
+            self.keydate['ctime'] = table.now()
+
+    def encrypt(self, pub, msg):
+        '''
+        Encrypt the message intended for the owner of the passed in pubic key
+        '''
+        pub = nacl.public.PublicKey(pub, nacl.encoding.HexEncoder)
+        box = nacl.public.Box(self.priv, pub)
+        nonce = nacl.utils.random(nacl.public.Box.NONCE_SIZE)
+        return box.encrypt(msg, nonce)
+
+    def decrypt(self, pub, msg):
+        '''
+        Decrypt a message from the given pub intended for this private key
+        '''
+        pub = nacl.public.PublicKey(pub, nacl.encoding.HexEncoder)
+        box = nacl.public.Box(pub, self.priv)
+        return box.decrypt(msg)
+
+    def sign(self, msg):
+        '''
+        Sign the message
+        '''
+        return self.sign.sign(msg)
+
+    def verify(self, vkey, msg):
+        '''
+        Verify the message
+        '''
+        vkey = nacl.signing.VerifyKey(vkey, encoder=nacl.encoding.HexEncoder)
+        try:
+            vkey.verify(msg)
+        except nacl.signing.BadSignatureError:
+            return False
+        return True
