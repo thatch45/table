@@ -11,6 +11,7 @@ standard fields and can be expanded:
 # Import python libs
 import os
 import json
+import datetime
 
 # Try to import serialization libs
 try:
@@ -18,6 +19,33 @@ try:
     HAS_MSGPACK = True
 except ImportError:
     HAS_MSGPACK = False
+
+
+def now():
+    '''
+    Return now as a date list
+    '''
+    return date_to_list(datetime.datetime.now())
+
+
+def list_to_date(date):
+    '''
+    Convert a list to a datetime
+    '''
+    return datetime.datetime(*date)
+
+
+def date_to_list(date):
+    '''
+    Convert a datetime object into a list
+    '''
+    return [date.year,
+            date.month,
+            date.day,
+            date.hour,
+            date.minute,
+            date.second]
+
 
 def gather_backend(backend, sec_backend):
     '''
@@ -122,19 +150,19 @@ class Public(object):
             fp_.write(self.serial.dumps(self.key.keydata))
         os.umask(current)
 
-    def encrypt(self, pub, data):
+    def encrypt(self, pub, msg):
         '''
         Pass in the remote target's public key object, and the data to
         encrypt, an encrypted string will be returned
         '''
-        return self.key.encrypt(pub, data)
+        return self.key.encrypt(pub, msg)
 
-    def decrypt(self, pub, data):
+    def decrypt(self, pub, msg):
         '''
         Pass in the remote reciever's public key object and the data to
         decrypt, an encrypted string will be returned
         '''
-        return self.key.decrypt(pub, data)
+        return self.key.decrypt(pub, msg)
 
     def sign(self, msg):
         '''
