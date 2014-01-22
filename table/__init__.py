@@ -47,7 +47,7 @@ def date_to_list(date):
             date.second]
 
 
-def gather_backend(backend, sec_backend):
+def _gather_backend(backend, sec_backend):
     '''
     Return the table object which abstracts the backend's functionality
     '''
@@ -121,7 +121,7 @@ class Public(object):
             **kwargs):
         self.serial = Serial(serial)
         self.kwargs = kwargs
-        self.public, self.secret = gather_backend(backend, sec_backend)
+        self.public, self.secret = _gather_backend(backend, sec_backend)
         self.key = self.__generate(keyfile, keyfile_secret)
 
     def __generate(self, keyfile, keyfile_secret):
@@ -181,7 +181,7 @@ class Secret(object):
     # TODO: Make a generator to encrypt messages in chains so we can load blocks
     # into memory
     def __init__(self, backend='pynacl', key=None):
-        self.public, self.secret = gather_backend(backend)
+        self.public, self.secret = _gather_backend(backend)
         self.key = self.secret.Key(key)
 
     def encrypt(self, msg):
