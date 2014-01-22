@@ -60,10 +60,10 @@ class Key(object):
             self.keydata['priv'] = self.priv.encode(nacl.encoding.HexEncoder)
             self.pub = self.priv.public_key
             self.keydata['pub'] = self.pub.encode(nacl.encoding.HexEncoder)
-            self.sign = nacl.signing.SigningKey.generate()
-            self.keydata['sign'] = self.sign.encode(nacl.encoding.HexEncoder)
-            self.verify = self.sign.verify_key
-            self.keydata['verify'] = self.verify.encode(nacl.encoding.HexEncoder)
+            self.sign_key = nacl.signing.SigningKey.generate()
+            self.keydata['sign'] = self.sign_key.encode(nacl.encoding.HexEncoder)
+            self.verify_key = self.sign.verify_key
+            self.keydata['verify'] = self.verify_key.encode(nacl.encoding.HexEncoder)
             self.keydata['ctime'] = table.now()
 
     def encrypt(self, pub, msg):
@@ -85,7 +85,7 @@ class Key(object):
         '''
         Sign the message
         '''
-        return self.sign.sign(msg)
+        return self.sign_key.sign(msg)
 
     def verify(self, vkey, msg):
         '''
