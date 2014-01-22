@@ -18,7 +18,7 @@ import nacl.signing
 import nacl.encoding
 
 
-def Key(object):
+class Key(object):
     '''
     Used to manage high level nacl operations
     '''
@@ -64,7 +64,7 @@ def Key(object):
             self.keydata['sign'] = self.sign.encode(nacl.encoding.HexEncoder)
             self.verify = self.sign.verify_key
             self.keydata['verify'] = self.verify.encode(nacl.encoding.HexEncoder)
-            self.keydate['ctime'] = table.now()
+            self.keydata['ctime'] = table.now()
 
     def encrypt(self, pub, msg):
         '''

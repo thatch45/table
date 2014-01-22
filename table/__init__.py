@@ -122,7 +122,7 @@ class Public(object):
         self.serial = Serial(serial)
         self.kwargs = kwargs
         self.public, self.secret = _gather_backend(backend, sec_backend)
-        self.key = self.__generate(keyfile, keyfile_secret)
+        self.__key = self.__generate(keyfile, keyfile_secret)
 
     def __generate(self, keyfile, keyfile_secret):
         '''
@@ -147,7 +147,7 @@ class Public(object):
         '''
         current = os.umask(191)
         with open(path, 'w+') as fp_:
-            fp_.write(self.serial.dumps(self.key.keydata))
+            fp_.write(self.serial.dumps(self.__key.keydata))
         os.umask(current)
 
     def encrypt(self, pub, msg):
@@ -155,23 +155,27 @@ class Public(object):
         Pass in the remote target's public key object, and the data to
         encrypt, an encrypted string will be returned
         '''
-        return self.key.encrypt(pub, msg)
+        return self.__key.encrypt(pub, msg)
 
     def decrypt(self, pub, msg):
         '''
         Pass in the remote reciever's public key object and the data to
         decrypt, an encrypted string will be returned
         '''
-        return self.key.decrypt(pub, msg)
+        return self.__key.decrypt(pub, msg)
 
     def sign(self, msg):
         '''
         Return a signature for the given data
         '''
-        return self.key.sign(msg)
+        return self.__key.sign(msg)
 
     def verify(self, verify_key, signed):
-        return self.key.verify(verify_key, signed)
+        '''
+        Given a remote verification key, verify that the signed message is
+        valid
+        '''
+        return self.__key.verify(verify_key, signed)
 
 
 class Secret(object):
@@ -182,16 +186,16 @@ class Secret(object):
     # into memory
     def __init__(self, backend='pynacl', key=None):
         self.public, self.secret = _gather_backend(backend)
-        self.key = self.secret.Key(key)
+        self.__key = self.secret.Key(key)
 
     def encrypt(self, msg):
         '''
         Encrypt the data using the given key
         '''
-        return self.key.encrypt(msg)
+        return self.__key.encrypt(msg)
 
     def decrypt(self, msg):
         '''
         Decrypt the data using the given key
         '''
-        return self.key.decrypt(msg)
+        return self.__key.decrypt(msg)
