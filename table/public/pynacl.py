@@ -62,7 +62,7 @@ class Key(object):
             self.keydata['pub'] = self.pub.encode(nacl.encoding.HexEncoder)
             self.sign_key = nacl.signing.SigningKey.generate()
             self.keydata['sign'] = self.sign_key.encode(nacl.encoding.HexEncoder)
-            self.verify_key = self.sign.verify_key
+            self.verify_key = self.sign_key.verify_key
             self.keydata['verify'] = self.verify_key.encode(nacl.encoding.HexEncoder)
             self.keydata['ctime'] = table.now()
 
