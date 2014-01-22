@@ -1,31 +1,49 @@
 '''
 pynacl secret key encryption
 '''
+# Import python libs
+import time
 
 # Import cryptographic libs
 import nacl.secret
 import nacl.utils
 
-def generate(size):
-    '''
-    Generate a random key
-    '''
-    if size is None or size < 24:
-        size = nacl.secret.SecretBox.KEY_SIZE
-    return nacl.utils.random(size)
 
-def encrypt(key, msg):
+class Key(object):
     '''
-    Using the given key, encrypt a message
+    Maintain a salsa20 key
     '''
-    nonce = nacl.utils.random(nacl.secret.SecretBox.NONCE_SIZE)
-    box = nacl.secret.SecretBox(key)
-    return box.encrypt(msg, nonce)
+    def __init__(self, key=None, size=None, **kwargs):
+        if len(key) < 32:
+            raise ValueError('Keysize is too small')
+        if key is None:
+            if size is None or size < 32:
+                size = nacl.secret.SecretBox.KEY_SIZE
+            key = nacl.utils.random(size)
+        self.key = key
+        self.box = nacl.secret.SecretBox(key)
+
+    def _safe_nonce(self):
+        '''
+        Generate a safe nonce value (safe assuming only this method is used to
+        create nonce values)
+        '''
+        now = str(time.time() * 1000000)
+        nonce = '{0}{1}'.format(
+                nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE - len(now)),
+                now)
+        return nonce
+
+    def encrypt(self, msg):
+        '''
+        Using the given key, encrypt a message
+        '''
+        nonce = self._safe_nonce()
+        return self.box.encrypt(msg, nonce)
 
 
-def decrypt(key, msg):
-    '''
-    Using the given key, decrypt a message
-    '''
-    box = nacl.secret.SecretBox(key)
-    return box.decrypt(msg)
+    def decrypt(self, msg):
+        '''
+        Using the given key, decrypt a message
+        '''
+        return self.box.decrypt(msg)

@@ -180,23 +180,18 @@ class Secret(object):
     '''
     # TODO: Make a generator to encrypt messages in chains so we can load blocks
     # into memory
-    def __init__(self, backend='pynacl'):
+    def __init__(self, backend='pynacl', key=None):
         self.public, self.secret = gather_backend(backend)
+        self.key = self.secret.Key(key)
 
-    def generate_key(self, size=None):
-        '''
-        Return n symetric key
-        '''
-        return self.secret.generate(size)
-
-    def encrypt(self, key, data):
+    def encrypt(self, msg):
         '''
         Encrypt the data using the given key
         '''
-        return self.secret.encrypt(key, data)
+        return self.key.encrypt(msg)
 
-    def decrypt(self, key, data):
+    def decrypt(self, msg):
         '''
         Decrypt the data using the given key
         '''
-        return self.secret.decrypt(key, data)
+        return self.key.decrypt(msg)
