@@ -1,8 +1,11 @@
 '''
-table backend for 
+table backend for aes using pycrypto
 '''
 
+# Import pycrypto libs
 from Crypto.Cipher import AES
+
+# Import python libs
 import hashlib
 import hmac
 import os
@@ -18,15 +21,15 @@ class Key(object):
     AES_BLOCK_SIZE = 16
     SIG_SIZE = hashlib.sha256().digest_size
 
-    def __init__(self, key=None, size=192, **kwargs):
+    def __init__(self, key=None, size=256, **kwargs):
         self.kwargs = kwargs
         if key is None:
-            key = self.generate_key_string()
+            key = self.generate_key_string(size)
         self.keys = self.extract_keys(key, size)
         self.key_size = size
 
     @classmethod
-    def generate_key_string(cls, key_size=192):
+    def generate_key_string(cls, key_size=256):
         key = os.urandom(key_size // 8 + cls.SIG_SIZE)
         return key.encode('base64').replace('\n', '')
 
