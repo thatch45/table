@@ -171,12 +171,11 @@ class Public(object):
         '''
         return self._key.sign(msg)
 
-    def verify(self, verify_key, signed):
+    def verify(self, signed):
         '''
-        Given a remote verification key, verify that the signed message is
-        valid
+        Verify that the signed message is valid
         '''
-        return self._key.verify(verify_key, signed)
+        return self._key.verify(signed)
 
 
 class Secret(object):
