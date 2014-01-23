@@ -30,7 +30,7 @@ class Key(object):
         '''
         now = str(time.time() * 1000000)
         nonce = '{0}{1}'.format(
-                nacl.utils.random(nacl.secret.SecretBox.KEY_SIZE - len(now)),
+                nacl.utils.random(nacl.secret.SecretBox.NONCE_SIZE - len(now)),
                 now)
         return nonce
 
