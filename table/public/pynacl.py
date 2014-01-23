@@ -9,6 +9,8 @@ The keydata consists of the following:
     verify: <HEX verify key>
 '''
 
+SEC_BACKEND = 'pynacl'
+
 # Import table libs
 import table
 
