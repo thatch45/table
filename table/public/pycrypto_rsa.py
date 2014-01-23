@@ -106,26 +106,25 @@ class Key(object):
         '''
         Sign and encrypt a message
         '''
-        pub = pub._key.pub
         ret = ''
         hash_ = SHA256.new()
         hash_.update(msg)
         ret += self.sign_key.sign(hash_)
-        for chunk in self._string_chunks(msg, pub.max_msg_size):
-            ret += self.encrypter.encrypt(chunk)
+        for chunk in self._string_chunks(msg, pub._key.max_msg_size):
+            ret += pub._key.encrypter.encrypt(chunk)
         return ret
 
     def decrypt(self, pub, msg):
         '''
         Decrypt the given message against the given public key
         '''
-        pub = pub._key.pub
-        c_size = pub.get_enc_chunk_size()
+        c_size = pub._key.get_enc_chunk_size()
         sig = msg[0:c_size]
         clear = ''
         for chunk in self._string_chunks(msg, c_size, c_size):
+            print len(chunk)
             clear += self.decrypter.decrypt(msg)
-        self.verify(sig + clear)
+        return pub._key.verify(sig + clear)
 
     def sign(self, msg):
         '''
