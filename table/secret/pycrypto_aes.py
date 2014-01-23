@@ -21,7 +21,7 @@ class Key(object):
     AES_BLOCK_SIZE = 16
     SIG_SIZE = hashlib.sha256().digest_size
 
-    def __init__(self, key=None, size=256, **kwargs):
+    def __init__(self, key=None, size=128, **kwargs):
         self.kwargs = kwargs
         if key is None:
             key = self.generate_key_string(size)
@@ -29,7 +29,7 @@ class Key(object):
         self.key_size = size
 
     @classmethod
-    def generate_key_string(cls, key_size=256):
+    def generate_key_string(cls, key_size=128):
         key = os.urandom(key_size // 8 + cls.SIG_SIZE)
         return key.encode('base64').replace('\n', '')
 
