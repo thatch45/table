@@ -157,9 +157,14 @@ class Public(object):
             **kwargs):
         self.serial = Serial(serial)
         self.kwargs = kwargs
+        self.backend = backend
         self.public, self.secret = _gather_backend(backend, sec_backend)
         self._key = self.__generate(keyfile, keyfile_secret)
         self.keydata = self._key.keydata
+        if sec_backend is None:
+            self.sec_backend = self.public.SEC_BACKEND
+        else:
+            self.sec_backend = sec_backend
 
     def __generate(self, keyfile, keyfile_secret):
         '''
