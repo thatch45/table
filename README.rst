@@ -1,6 +1,11 @@
 The Table Cryptographic Normalization System
 ============================================
 
+.. note::
+
+    This library is currently experimental, no security claims are yet present
+    and is still undergoing extensive evaluation and heavy development
+
 The idea is very simple, a single interface that simplifies cryptographic
 routines to make complex libraries easy and safe to use.
 
