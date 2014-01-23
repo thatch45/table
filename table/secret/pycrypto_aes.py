@@ -36,26 +36,26 @@ class Key(object):
         assert len(key) == key_size / 8 + cls.SIG_SIZE, 'invalid key'
         return key[:-cls.SIG_SIZE], key[-cls.SIG_SIZE:]
 
-    def encrypt(self, data):
+    def encrypt(self, msg):
         '''
         encrypt data with AES-CBC and sign it with HMAC-SHA256
         '''
         aes_key, hmac_key = self.keys
-        pad = self.AES_BLOCK_SIZE - len(data) % self.AES_BLOCK_SIZE
-        data = data + pad * chr(pad)
+        pad = self.AES_BLOCK_SIZE - len(msg) % self.AES_BLOCK_SIZE
+        data = msg + pad * chr(pad)
         iv_bytes = os.urandom(self.AES_BLOCK_SIZE)
         cypher = AES.new(aes_key, AES.MODE_CBC, iv_bytes)
         data = iv_bytes + cypher.encrypt(data)
         sig = hmac.new(hmac_key, data, hashlib.sha256).digest()
         return data + sig
 
-    def decrypt(self, data):
+    def decrypt(self, msg):
         '''
         verify HMAC-SHA256 signature and decrypt data with AES-CBC
         '''
         aes_key, hmac_key = self.keys
-        sig = data[-self.SIG_SIZE:]
-        data = data[:-self.SIG_SIZE]
+        sig = msg[-self.SIG_SIZE:]
+        data = msg[:-self.SIG_SIZE]
         mac_bytes = hmac.new(hmac_key, data, hashlib.sha256).digest()
         if len(mac_bytes) != len(sig):
             raise ValueError('message authentication failed')
