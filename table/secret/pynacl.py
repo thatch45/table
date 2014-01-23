@@ -14,12 +14,12 @@ class Key(object):
     Maintain a salsa20 key
     '''
     def __init__(self, key=None, size=None, **kwargs):
-        if len(key) < 32:
-            raise ValueError('Keysize is too small')
         if key is None:
             if size is None or size < 32:
                 size = nacl.secret.SecretBox.KEY_SIZE
             key = nacl.utils.random(size)
+        if len(key) < 32:
+            raise ValueError('Keysize is too small')
         self.key = key
         self.box = nacl.secret.SecretBox(key)
 
