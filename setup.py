@@ -41,7 +41,9 @@ kwargs.update(
         'Operating System :: POSIX :: Linux',
         ],
     packages=[
-        'table'],
+        'table',
+        'table.public',
+        'table.secret'],
 )
 
 if USE_SETUPTOOLS:
