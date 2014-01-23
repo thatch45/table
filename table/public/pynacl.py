@@ -19,6 +19,9 @@ import nacl.public
 import nacl.signing
 import nacl.encoding
 
+# Import python libs
+import time
+
 
 class Key(object):
     '''
@@ -68,12 +71,23 @@ class Key(object):
             self.keydata['verify'] = self.verify_key.encode(nacl.encoding.HexEncoder)
             self.keydata['ctime'] = table.now()
 
+    def _safe_nonce(self):
+        '''
+        Generate a safe nonce value (safe assuming only this method is used to
+        create nonce values)
+        '''
+        now = str(time.time() * 1000000)
+        nonce = '{0}{1}'.format(
+                nacl.utils.random(nacl.secret.SecretBox.NONCE_SIZE - len(now)),
+                now)
+        return nonce
+
     def encrypt(self, pub, msg):
         '''
         Encrypt the message intended for the owner of the passed in pubic key
         '''
         box = nacl.public.Box(self.priv, pub._key.pub)
-        nonce = nacl.utils.random(nacl.public.Box.NONCE_SIZE)
+        nonce = self._safe_nonce()
         return box.encrypt(msg, nonce)
 
     def decrypt(self, pub, msg):
