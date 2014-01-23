@@ -51,14 +51,16 @@ def _gather_backend(backend, sec_backend=None):
     '''
     Return the table object which abstracts the backend's functionality
     '''
-    if sec_backend is None:
-        sec_backend = backend
     pubname = 'table.public.{0}'.format(backend)
     pubmod = __import__(pubname)
+    pubmod = getattr(pubmod.public, backend)
+    if sec_backend is None:
+        sec_backend = pubmod.SEC_BACKEND
     secname = 'table.secret.{0}'.format(sec_backend)
     secmod = __import__(secname)
-    return (getattr(pubmod.public, backend),
-            getattr(secmod.secret, backend))
+    secmod = getattr(secmod.secret, backend)
+    return (pubmod,
+            secmod)
 
 
 class Serial(object):

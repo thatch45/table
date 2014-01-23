@@ -87,14 +87,11 @@ class Key(object):
         '''
         return self.sign_key.sign(msg)
 
-    def verify(self, vkey, msg):
+    def verify(self, msg):
         '''
         Verify the message
         '''
-        vkey = nacl.signing.VerifyKey(
-                vkey._key.verify_key,
-                encoder=nacl.encoding.HexEncoder)
         try:
-            return vkey.verify(msg)
+            return self.verify_key.verify(msg)
         except nacl.signing.BadSignatureError:
             return False

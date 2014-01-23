@@ -7,12 +7,18 @@ The keydata consists of the following:
     priv: PEM encoded private key
 '''
 
+SEC_BACKEND = 'pycrypto_aes'
+
 # Import pycrypto libs
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_PSS
 from Crypto.Hash import SHA
 import Crypto.Util.number
+
+# Import table libs
+import table
+
 
 class Key(object):
     '''
@@ -58,6 +64,7 @@ class Key(object):
         keydata = {'components': []}
         for attr in key.keydata:
             keydata['components'].append(getattr(key, attr))
+        keydata['ctime'] = table.now()
         return keydata
 
     def _gen_key(self):
