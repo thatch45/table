@@ -45,10 +45,10 @@ class Key(object):
                 self.priv = nacl.public.PrivateKey.generate()
                 self.pub = self.priv.public_key
             if 'sign' in keydata:
-                self.sign = nacl.signing.SigningKey(
+                self.sign_key = nacl.signing.SigningKey(
                         keydata['sign'],
                         nacl.encoding.HexEncoder)
-                self.verify = self.sign.verify_key
+                self.verify_key = self.sign.verify_key
             elif 'verify' in keydata:
                 self.verify = nacl.signing.VerifyKey(
                         keydata['verify'],
