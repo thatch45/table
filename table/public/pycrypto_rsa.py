@@ -13,7 +13,7 @@ SEC_BACKEND = 'pycrypto_aes'
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_PSS
-from Crypto.Hash import SHA
+from Crypto.Hash import SHA256
 import Crypto.Util.number
 
 # Import table libs
@@ -94,7 +94,7 @@ class Key(object):
         '''
         Return the max size of a message chunk
         '''
-        return (Crypto.Util.number.size(self.pub.n) / 8) -2 - (SHA.digest_size * 2)
+        return (Crypto.Util.number.size(self.pub.n) / 8) -2 - (SHA256.digest_size * 2)
 
     def get_enc_chunk_size(self):
         '''
@@ -108,7 +108,7 @@ class Key(object):
         '''
         pub = pub._key.pub
         ret = ''
-        hash_ = SHA.new()
+        hash_ = SHA256.new()
         hash_.update(msg)
         ret += self.sign_key.sign(hash_)
         for chunk in self._string_chunks(msg, pub.max_msg_size):
@@ -131,7 +131,7 @@ class Key(object):
         '''
         Sign a message
         '''
-        hash_ = SHA.new()
+        hash_ = SHA256.new()
         hash_.update(msg)
         sig = self.sign_key.sign(hash_)
         return sig + msg
@@ -142,7 +142,7 @@ class Key(object):
         '''
         sig = msg[0:self.enc_chunk_size]
         msg = msg[self.enc_chunk_size:]
-        hash_ = SHA.new()
+        hash_ = SHA256.new()
         hash_.update(msg)
         if self.verify_key.verify(hash_, sig):
             return msg
