@@ -58,7 +58,7 @@ def _gather_backend(backend, sec_backend=None):
         sec_backend = pubmod.SEC_BACKEND
     secname = 'table.secret.{0}'.format(sec_backend)
     secmod = __import__(secname)
-    secmod = getattr(secmod.secret, backend)
+    secmod = getattr(secmod.secret, sec_backend)
     return (pubmod,
             secmod)
 
