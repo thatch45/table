@@ -47,7 +47,7 @@ def date_to_list(date):
             date.second]
 
 
-def _gather_backend(backend, sec_backend):
+def _gather_backend(backend, sec_backend=None):
     '''
     Return the table object which abstracts the backend's functionality
     '''
