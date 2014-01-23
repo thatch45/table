@@ -137,7 +137,8 @@ class Public(object):
                 with open(keyfile, 'r') as fp_:
                     keydata = fp_.read()
                 if keyfile_secret:
-                    keydata = self.secret.decrypt(keydata, keyfile_secret)
+                    file_key = self.secret.Key(keyfile_secret)
+                    keydata = file_key.decrypt(keydata, keyfile_secret)
                 keydata = self.serial.loads(keydata)
             else:
                 raise ValueError('Keyfile {0} Not Found'.format(keyfile))
