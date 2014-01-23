@@ -53,7 +53,7 @@ class Key(object):
                 self.sign_key = nacl.signing.SigningKey(
                         keydata['sign'],
                         nacl.encoding.HexEncoder)
-                self.verify_key = self.sign.verify_key
+                self.verify_key = self.sign_key.verify_key
             elif 'verify' in keydata:
                 self.verify = nacl.signing.VerifyKey(
                         keydata['verify'],
