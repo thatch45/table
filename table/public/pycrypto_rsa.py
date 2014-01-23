@@ -83,12 +83,12 @@ class Key(object):
         if i is None:
             i = 0
         msg_len = len(msg)
-        while i <  msg_len:
+        while i < msg_len:
             top = i + size
             if top > msg_len:
                 top = msg_len
             yield msg[i:top]
-            i =+ size
+            i = top
 
     def get_max_msg_size(self):
         '''
@@ -122,8 +122,7 @@ class Key(object):
         sig = msg[0:c_size]
         clear = ''
         for chunk in self._string_chunks(msg, c_size, c_size):
-            print len(chunk)
-            clear += self.decrypter.decrypt(msg)
+            clear += self.decrypter.decrypt(chunk)
         return pub._key.verify(sig + clear)
 
     def sign(self, msg):
