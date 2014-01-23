@@ -95,7 +95,6 @@ class Key(object):
                 vkey._key.verify_key,
                 encoder=nacl.encoding.HexEncoder)
         try:
-            vkey.verify(msg)
+            return vkey.verify(msg)
         except nacl.signing.BadSignatureError:
             return False
-        return True
