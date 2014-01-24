@@ -150,6 +150,7 @@ class Public(object):
     def __init__(
             self,
             backend='pynacl',
+            keydata=None,
             keyfile=None,
             keyfile_secret=None,
             serial='json',
@@ -159,17 +160,19 @@ class Public(object):
         self.kwargs = kwargs
         self.backend = backend
         self.public, self.secret = _gather_backend(backend, sec_backend)
-        self._key = self.__generate(keyfile, keyfile_secret)
+        self._key = self.__generate(keydata, keyfile, keyfile_secret)
         self.keydata = self._key.keydata
         if sec_backend is None:
             self.sec_backend = self.public.SEC_BACKEND
         else:
             self.sec_backend = sec_backend
 
-    def __generate(self, keyfile, keyfile_secret):
+    def __generate(self, keydata, keyfile, keyfile_secret):
         '''
         Return the key from the keyfile, or generate a new key
         '''
+        if keydata:
+            return self.public.Key(keydata)
         if keyfile:
             if os.path.isfile(keyfile):
                 # Keyfiles are small, read it all in
